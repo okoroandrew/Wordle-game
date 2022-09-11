@@ -4,17 +4,17 @@ import android.content.Context
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.SpannableStringBuilder
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
+import androidx.core.text.color
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var wordToGuess : String
     private var countRound = 1
+    private var streak = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,25 +32,27 @@ class MainActivity : AppCompatActivity() {
         val guess2Check = findViewById<TextView>(R.id.guess_2_check_word_textView)
         val yourGuess3 = findViewById<TextView>(R.id.guess_3_word_textView)
         val guess3Check = findViewById<TextView>(R.id.guess_3_check_word_textView)
-        val restartButton = findViewById<Button>(R.id.restart_button)
-        //val just = findViewById<TextView>(R.id.guess_1_textView)
+        val nextButton = findViewById<Button>(R.id.next_button)
+        val resetButton = findViewById<ImageView>(R.id.reset_button)
+        val streakTextView = findViewById<TextView>(R.id.streak_textView)
 
-        // when you click the guess button
         guessButton.setOnClickListener{
             // get the content of the editTextView, make uppercase, clear editText and Hide keyboard
             val editTextContent = wordEditTextView.text.toString().uppercase()
             it.hideKeyboard()
-            wordEditTextView.getText().clear()
+            wordEditTextView.text.clear()
 
             if (editTextContent.length == 4 && editTextContent.matches("^[A-Z]*$".toRegex())) {
                 when (countRound) {
                     1 -> {
                         yourGuess1.text = editTextContent
-//                        just.text = wordToGuess
                         guess1Check.text = checkGuess(editTextContent)
                         if (checkWin(guess1Check.text.toString(), correctWordTextView, countRound)){
                             guessButton.visibility = View.INVISIBLE
-                            restartButton.visibility = View.VISIBLE
+                            nextButton.visibility = View.VISIBLE
+                            streak++
+                            streakTextView.text = streak.toString()
+
                         }
                         countRound++
                     }
@@ -59,7 +61,9 @@ class MainActivity : AppCompatActivity() {
                         guess2Check.text = checkGuess(editTextContent)
                         if (checkWin(guess2Check.text.toString(), correctWordTextView, countRound)){
                             guessButton.visibility = View.INVISIBLE
-                            restartButton.visibility = View.VISIBLE
+                            nextButton.visibility = View.VISIBLE
+                            streak++
+                            streakTextView.text = streak.toString()
                         }
                         countRound++
                     }
@@ -68,7 +72,9 @@ class MainActivity : AppCompatActivity() {
                         guess3Check.text = checkGuess(editTextContent)
                         checkWin(guess3Check.text.toString(), correctWordTextView, countRound)
                         guessButton.visibility = View.INVISIBLE
-                        restartButton.visibility = View.VISIBLE
+                        nextButton.visibility = View.VISIBLE
+                        streak++
+                        streakTextView.text = streak.toString()
                         countRound++
                     }
                     else -> {
@@ -88,18 +94,37 @@ class MainActivity : AppCompatActivity() {
         }
 
         //Set onClickListener for restart button to restart the game
-        restartButton.setOnClickListener {
+        nextButton.setOnClickListener {
             guessButton.visibility = View.VISIBLE
-            restartButton.visibility = View.INVISIBLE
+            nextButton.visibility = View.INVISIBLE
             wordToGuess = FourLetterWordList.getRandomFourLetterWord()
             correctWordTextView.visibility = View.INVISIBLE
-            yourGuess1.setText(getText(R.string.four_dash))
-            yourGuess2.setText(getText(R.string.four_dash))
-            yourGuess3.setText(getText(R.string.four_dash))
-            guess1Check.setText(resources.getString(R.string.four_dash))
-            guess2Check.setText(resources.getString(R.string.four_dash))
-            guess3Check.setText(resources.getString(R.string.four_dash))
+            yourGuess1.text = getText(R.string.four_dash)
+            yourGuess2.text = getText(R.string.four_dash)
+            yourGuess3.text = getText(R.string.four_dash)
+            guess1Check.text = getString(R.string.four_dash)
+            guess2Check.text = resources.getString(R.string.four_dash)
+            guess3Check.text = resources.getString(R.string.four_dash)
             countRound = 1
+        }
+
+        //reset button gives you a new word and clear your gueses
+        resetButton.setOnClickListener {
+            if (nextButton.visibility == View.INVISIBLE) {
+                wordToGuess = FourLetterWordList.getRandomFourLetterWord()
+                correctWordTextView.visibility = View.INVISIBLE
+                yourGuess1.text = getText(R.string.four_dash)
+                yourGuess2.text = getText(R.string.four_dash)
+                yourGuess3.text = getText(R.string.four_dash)
+                guess1Check.text = resources.getString(R.string.four_dash)
+                guess2Check.text = resources.getString(R.string.four_dash)
+                guess3Check.text = resources.getString(R.string.four_dash)
+                countRound = 1
+            }
+
+            else{
+                Toast.makeText(it.context, "cannot reset word", Toast.LENGTH_SHORT).show()
+            }
         }
 
     }
@@ -114,25 +139,29 @@ class MainActivity : AppCompatActivity() {
      *   '+' represents the right letter in the wrong place
      *   'X' represents a letter not in the target word
      */
-    private fun checkGuess(guess: String) : String {
-        var result = ""
+    private fun checkGuess(guess: String): SpannableStringBuilder {
+        val s = SpannableStringBuilder()
+
         for (i in 0..3) {
             if (guess[i] == wordToGuess[i]) {
-                result += "O"
+                s.color(Color.GREEN) { append(guess[i]) }
             }
+
             else if (guess[i] in wordToGuess) {
-                result += "+"
+                s.color(Color.BLUE) { append(guess[i]) }
             }
+
             else {
-                result += "X"
+                s.color(Color.RED) { append(guess[i]) }
             }
+
         }
-        return result
+        return s
     }
 
 
     private fun checkWin(result: String, correctWordTextView: TextView, round: Int) : Boolean {
-        if (result == "OOOO"){
+        if (result.equals(wordToGuess, true)){
             correctWordTextView.text = wordToGuess
             correctWordTextView.visibility = View.VISIBLE
             correctWordTextView.setTextColor(Color.GREEN)
@@ -140,7 +169,7 @@ class MainActivity : AppCompatActivity() {
             return true
         }
 
-        else if(result != "OOOO" && round == 3){
+        else if(!result.equals(wordToGuess, true) && round == 3){
             correctWordTextView.text = wordToGuess
             correctWordTextView.visibility = View.VISIBLE
             correctWordTextView.setTextColor(Color.RED)
@@ -150,7 +179,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    fun View.hideKeyboard() {
+    private fun View.hideKeyboard() {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(windowToken, 0)
     }

@@ -4,7 +4,7 @@
     <string name="four_dash">_ _ _ _</string>
     <string name="guess_2">Guess #2</string>
     <string name="guess_1_check">Guess #1 Check</string>
-    <string name="restart">RESTART</string>
+    <string name="next">NEXT</string>
     <string name="guess">GUESS!</string>
     <string name="enter_4_letter_guess_here">Enter 4 letter guess here</string>
     <string name="guess_3_check">Guess #3 Check</string>
