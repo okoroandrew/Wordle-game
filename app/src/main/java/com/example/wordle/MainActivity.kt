@@ -70,11 +70,12 @@ class MainActivity : AppCompatActivity() {
                     3 -> {
                         yourGuess3.text = editTextContent
                         guess3Check.text = checkGuess(editTextContent)
-                        checkWin(guess3Check.text.toString(), correctWordTextView, countRound)
+                        if (checkWin(guess3Check.text.toString(), correctWordTextView, countRound)){
+                            streak++
+                            streakTextView.text = streak.toString()
+                        }
                         guessButton.visibility = View.INVISIBLE
                         nextButton.visibility = View.VISIBLE
-                        streak++
-                        streakTextView.text = streak.toString()
                         countRound++
                     }
                     else -> {
