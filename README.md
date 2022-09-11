@@ -4,7 +4,7 @@ Submitted by: **Blessing Andrew Okoro**
 
 **Wordle** is an android app that recreates a simple version of the popular word game [Wordle](https://www.nytimes.com/games/wordle/index.html). 
 
-Time spent: **8** hours spent in total
+Time spent: **10** hours spent in total
 
 ## Required Features
 
@@ -18,11 +18,11 @@ The following **required** functionality is completed:
 The following **optional** features are implemented:
 
 - [ ] User can toggle betweeen different word lists
-- [ ] User can see the 'correctness' of their guess through colors on the word 
+- [x] User can see the 'correctness' of their guess through colors on the word 
 - [x] User sees a visual change after guessing the correct word
-- [ ] User can tap a 'Reset' button to get a new word and clear previous guesses
+- [x] User can tap a 'Reset' button to get a new word and clear previous guesses
 - [x] User will get an error message if they input an invalid guess
-- [ ] User can see a 'streak' record of how many words they've guessed correctly.
+- [x] User can see a 'streak' record of how many words they've guessed correctly.
 
 The following **additional** features are implemented:
 
@@ -32,9 +32,16 @@ The following **additional** features are implemented:
 
 ## Video Walkthrough
 
-Here's a walkthrough of implemented user stories:
+Here's a walkthrough of implemented user stories (Required Features):
 
 <img src='walkthrough.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+
+<!-- Replace this with whatever GIF tool you used! -->
+GIF created with [Peek](https://github.com/phw/peek).
+
+Here's a walkthrough of implemented user stories (Stretch Features):
+
+<img src='walkthrough2.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 <!-- Replace this with whatever GIF tool you used! -->
 GIF created with [Peek](https://github.com/phw/peek).
