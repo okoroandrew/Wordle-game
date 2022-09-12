@@ -13,7 +13,7 @@ import androidx.core.text.color
 class MainActivity : AppCompatActivity() {
 
     private lateinit var wordToGuess : String
-    private var countRound = 1
+    private var countRound = 0
     private var streak = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,40 +43,31 @@ class MainActivity : AppCompatActivity() {
             wordEditTextView.text.clear()
 
             if (editTextContent.length == 4 && editTextContent.matches("^[A-Z]*$".toRegex())) {
+                countRound++
+
                 when (countRound) {
                     1 -> {
                         yourGuess1.text = editTextContent
                         guess1Check.text = checkGuess(editTextContent)
-                        if (checkWin(guess1Check.text.toString(), correctWordTextView, countRound)){
+                        if (checkWin(guess1Check.text.toString(), correctWordTextView, countRound, streakTextView)){
                             guessButton.visibility = View.INVISIBLE
                             nextButton.visibility = View.VISIBLE
-                            streak++
-                            streakTextView.text = streak.toString()
-
                         }
-                        countRound++
                     }
                     2 -> {
                         yourGuess2.text = editTextContent
                         guess2Check.text = checkGuess(editTextContent)
-                        if (checkWin(guess2Check.text.toString(), correctWordTextView, countRound)){
+                        if (checkWin(guess2Check.text.toString(), correctWordTextView, countRound, streakTextView)){
                             guessButton.visibility = View.INVISIBLE
                             nextButton.visibility = View.VISIBLE
-                            streak++
-                            streakTextView.text = streak.toString()
                         }
-                        countRound++
                     }
                     3 -> {
                         yourGuess3.text = editTextContent
                         guess3Check.text = checkGuess(editTextContent)
-                        if (checkWin(guess3Check.text.toString(), correctWordTextView, countRound)){
-                            streak++
-                            streakTextView.text = streak.toString()
-                        }
+                        (checkWin(guess3Check.text.toString(), correctWordTextView, countRound, streakTextView))
                         guessButton.visibility = View.INVISIBLE
                         nextButton.visibility = View.VISIBLE
-                        countRound++
                     }
                     else -> {
                         //pass
@@ -106,7 +97,7 @@ class MainActivity : AppCompatActivity() {
             guess1Check.text = getString(R.string.four_dash)
             guess2Check.text = resources.getString(R.string.four_dash)
             guess3Check.text = resources.getString(R.string.four_dash)
-            countRound = 1
+            countRound = 0
         }
 
         //reset button gives you a new word and clear your gueses
@@ -120,7 +111,7 @@ class MainActivity : AppCompatActivity() {
                 guess1Check.text = resources.getString(R.string.four_dash)
                 guess2Check.text = resources.getString(R.string.four_dash)
                 guess3Check.text = resources.getString(R.string.four_dash)
-                countRound = 1
+                countRound = 0
             }
 
             else{
@@ -161,12 +152,14 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun checkWin(result: String, correctWordTextView: TextView, round: Int) : Boolean {
+    private fun checkWin(result: String, correctWordTextView: TextView, round: Int, streakTextView: TextView) : Boolean {
         if (result.equals(wordToGuess, true)){
             correctWordTextView.text = wordToGuess
             correctWordTextView.visibility = View.VISIBLE
             correctWordTextView.setTextColor(Color.GREEN)
             Toast.makeText(this, "You Won!!!", Toast.LENGTH_LONG).show()
+            streak++
+            streakTextView.text = streak.toString()
             return true
         }
 
