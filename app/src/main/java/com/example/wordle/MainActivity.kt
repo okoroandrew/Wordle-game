@@ -69,9 +69,6 @@ class MainActivity : AppCompatActivity() {
                         guessButton.visibility = View.INVISIBLE
                         nextButton.visibility = View.VISIBLE
                     }
-                    else -> {
-                        //pass
-                    }
                 }
             }
 
@@ -85,7 +82,7 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        //Set onClickListener for restart button to restart the game
+        //Set onClickListener for next button to restart the game
         nextButton.setOnClickListener {
             guessButton.visibility = View.VISIBLE
             nextButton.visibility = View.INVISIBLE
@@ -126,10 +123,10 @@ class MainActivity : AppCompatActivity() {
      *   wordToGuess : String - the target word the user is trying to guess
      *   guess : String - what the user entered as their guess
      *
-     * Returns a String of 'O', '+', and 'X', where:
-     *   'O' represents the right letter in the right place
-     *   '+' represents the right letter in the wrong place
-     *   'X' represents a letter not in the target word
+     * Returns a String of color Green, Blue, Red where:
+     *   Green represents the right letter in the right place
+     *   Blue represents the right letter in the wrong place
+     *   Red represents a letter not in the target word
      */
     private fun checkGuess(guess: String): SpannableStringBuilder {
         val s = SpannableStringBuilder()
